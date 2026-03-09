@@ -1,0 +1,197 @@
+﻿													Asp.net core web api: 
+
+What is API => Application Programing Interface 
+=> It looks like a bridge that will allow to communicate two application each other. 
+Data format => JSON(Javascirpt Object Notation), XML ==> Xtensible markup language.
+
+Real-life Example 
+Blinkit App => Talks to Blinkit server using API, 
+ATM => talk to bank server using API
+Mobile app => talks to backend API.
+
+Notes => An api exposes endpoints that accept request and return response (generally used in JSON format)
+
+====================================================================
+
+=> REST vs SOAP
+Rest : Representational State Transfer 
+Differences : 
+Type : It is an architectural style for buildings API. 
+Data format : JSON, XML 
+Used In : Web & Mobile Apps 
+
+
+SOAP : Simple Object Access Protocol
+Differences : 
+Type : It is a protocol for exchanging structured information.
+Data format : XML 
+Used In : Banking, Enterprise
+
+Notes : Moderns web applications mostly used REST APIs. 
+
+=======================================================
+HTTP Protocol : Hyper text transfer protocol
+It is the foundation of Web APIs. 
+
+HPPTS Methods : 
+GET, POST, PUT, Delete, Patch
+
+Url: GET /api/students
+
+HTTP Status Codes : 
+Code		Meaning
+200		OK
+201		Created
+400		Bad Request
+401		Unauthorized 
+404		Not Found 
+500		Server Error
+
+=> Status code tells the clients what happened on the server.  
+
+==========================================================
+Client-Server Architecture:
+ Client : Request maker
+ Server : Response Provider.
+
+Example : 
+Angular Application(HRMS) => .NET API  
+Mobile Appl => .NET API  
+
+===========================================================
+ 
+Json & Serialization :
+
+Json(JavaScipt Object Notation) :
+
+{
+  "id" : 1, 
+  "name" : "Deepraj"
+  "email" : "deepraj@gmail.com"
+}
+
+Serialization: 
+Converting c# object => Json 
+
+Deserialization : 
+Json => Converting c# object
+
+Note : In web api, when we return an object, .net automatically converts it into json.
+
+======================================================
+
+API Testing Tool (Postman & Swagger) : 
+
+POSTMAN : 
+- Send request 
+- Test API 
+- Send headers 
+- Send Body
+- Send file... etc 
+
+SWAGGER :
+- Buil-in documentation tool. 
+- Auto- generated UI 
+- Test API in browser directly. 
+
+====================================================================
+
+
+.Net Core & .Net 8 Overview 
+-----------------------------------
+
+.Net Evolution 
+Phase1 - .Net Framework
+  - Windows only 
+  - Not cross-platform 
+  - Heavy 
+
+Phase2 - .Net Core 
+ - Cross platform 
+ - Lightweight
+ - Faster 
+
+Phase3 - .Net 5+ 
+- Now called simply ".NET"
+
+Current Version 
+- .Net10 (LTS Version)
+
+
+======================================================================
+
+
+		LTS(Long Term Support)  VS STS(Sort Term Support) 
+
+LTS => Long Term Support , 3Year Support. 
+STS => Sort Term Support , 18 Months
+
+=> For Production applications, always use LTS.
+
+
+.NET 8 works on: 
+ => Windows 
+ => Linux 
+ => macOS 
+ => Docker 
+======================================================================
+
+SDK(software development kit) vs Runtime
+
+SDK : 
+  Used for : 
+	- Developing application 
+	- Build 
+	- Compile 
+ To check : dotnet --list-sdks
+
+Runtime : 
+  Used for : 
+	- Running application only
+ To check : dotnet --list-runtimes
+
+Note : Developer machine needs SDK 
+       Production server only needs Runtime.
+
+======================================================================
+
+Controller => Controller handles HTTP/HTTPS Request. 
+Example : Client(Browser) => Request(api/Student/GetALlStudent) => Controller => Response(Return).
+
+-----------------------------
+Attribute..
+ApiController Attribute :
+[ApiController], [AllowAnoymous]
+
+-----------------------------
+Routing (Attribute Routing)
+
+Routing determine which endpoint will execute. 
+Example : [Route("api/[controller]/index")]
+
+If Controller name is : 
+StudentController => Route becomes : api/student/index
+
+
+----------------------------------------------------------
+
+Route Constraints : 
+Route contraints validate parameters. 
+Example : 
+ [HttpGet("{id:int}")]
+   => Means here id will be only int, you cannot pass the string or other data type value. 
+
+----------------------------------------------------------
+
+IActionResult Vs ActionResutl<T>
+
+IActionResult : Returs different type of respose.
+eg : return Ok(), return BadRequest()
+
+
+ActionResutl<T>: Used when returning typed data. 
+eg :  return student. retur list. 
+
+
+
+

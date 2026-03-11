@@ -192,6 +192,26 @@ eg : return Ok(), return BadRequest()
 ActionResutl<T>: Used when returning typed data. 
 eg :  return student. retur list. 
 
+===========================================================================
+
+What is ORM ? 
+ORM => Object Relational Mapper 
+This is a technique that converts database tables into c# objects.
+Instead of writing sql queries you can use c# code to intract with the database.
+
+
+for eg : SELECT * FROM Students; 
+with orm => 
+	var student = _context.students.ToList();
+
+Step : C# classes => EntityFramework => SQL Queries => Database Tables. 
+
+============================================================================
+EntityFramework has 3 approaches: 
+	1. Code First Approach		=> Database generated from c# classes
+	2. Database First Approach  => Classes generated from DB
+	3. Model First Approach.	=> Using EDXM 
+
 
 
 

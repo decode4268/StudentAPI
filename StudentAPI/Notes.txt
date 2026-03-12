@@ -213,5 +213,31 @@ EntityFramework has 3 approaches:
 	3. Model First Approach.	=> Using EDXM 
 
 
+=====================================================================
+
+DbContext : Dbconext is the bridge btw application and database.
+    Purpose : 
+		1. Database connection
+		2. Entity tracking 
+		3. Curd operations. 
+
+ DbContext : Main EF class
+ DbSet : Represent database table
+ Student : Table name
+
+ =====================================================================
+
+ Step 1. Class create (for table)
+ Step 2. Download package (EntityframeworkCore.Tool, EntityframeworkCore.SqlServer)
+ Step 3. DatabaseContext file (inside add dbset with class name)
+ Step 4. Connection define in application.json file
+ Step 5. Add connectionstring in program.cs file inside services.
+ Step 6. Add-Migration and Update-Migrations
+
+ ======================================================================
+
+ Async / Await 
+ => Async improves performace of application. 
+ Advantage : Non-blocking code, Handle multiple requests at the same time, Better API performace.
 
 

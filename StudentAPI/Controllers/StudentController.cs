@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using StudentAPI.Database;
 using StudentAPI.Model;
 
 namespace StudentAPI.Controllers
@@ -8,87 +10,63 @@ namespace StudentAPI.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private  readonly string errMsg = "record already exist with same id";
-        private  readonly string deleteMsg = "Data Delete Successfully";
-        static List<Student> students = new List<Student>()
+        private readonly ApplicationDbContext _dbContext;
+        public StudentController(ApplicationDbContext dbContext)
         {
-            new Student { Id = 1, Name="Deepraj", Email="deepraj@gmail.com", Age=20}
-        };
+            _dbContext = dbContext;
+        }
 
         [HttpGet("GetStudents")]
-        public ActionResult<List<Student>> GetStudents()
+        public async Task<ActionResult<List<Student>>> GetStudents()
         {
-            return students;
+            var data = await _dbContext.Students.ToListAsync();
+            return data;
         }
-
-        //[HttpGet]
-        //public IActionResult GetAllStudents()
-        //{
-        //    return Ok(students);
-        //}
-
         [HttpGet("GetStudentById{id}")]
-        public ActionResult<Student> GetStudentById(int id)
+        public async Task<ActionResult<Student>> GetStudentById(int id)
         {
-            // task if id is provided wrong then return data not found
-            var student = students.FirstOrDefault(x => x.Id == id);
-            return student;
+            var data = _dbContext.Students.FirstOrDefault(x => x.Id == id);
+            if(data == null)
+            {
+                return NotFound();
+            }
+            return data;
         }
 
-        [HttpPost("Addnewstudent")]
-        public IActionResult AddStudent(Student student)
+        [HttpPost("AddStudent")]
+        public async Task<IActionResult> AddStudent(Student student)
         {
-            // Check the id 
-            // if id is already exist in the  students
-            // then show msg record already exist with id.
-            var data = students.Where(x => x.Id == student.Id);
-            if (data.Count() > 0)      // data.Any();
-            {
-                return Ok(new
-                {
-                    this.errMsg
-                });
-            }
-            else
-            {
-                students.Add(student);
-                return CreatedAtAction(nameof(GetStudents), new { id = student.Id }, student);
-            }
+            await _dbContext.Students.AddAsync(student);
+            await _dbContext.SaveChangesAsync();
+
+            return CreatedAtAction(nameof(GetStudents), new { id = student }, student);
         }
 
-        [HttpPut("UpdateStudentDtl")]
-        public IActionResult UpdateStudent(Student student)
+        [HttpPost("UpdateStudent")]
+        public async Task<IActionResult> UpdateStudent(Student student)
         {
-            var existingData = students.FirstOrDefault(x => x.Id == student.Id);
+            var existingData = await _dbContext.Students.FindAsync(student.Id);
             if (existingData == null)
-            {
-                return NotFound(new
-                {
-                    this.errMsg
-                });
-            }
+                return NotFound();
             existingData.Name = student.Name;
             existingData.Email = student.Email;
             existingData.Age = student.Age;
+
+            await _dbContext.SaveChangesAsync();
             return Ok(existingData);
+
         }
 
-        [HttpDelete("DeleteStudent{id}")]
-        public IActionResult DeleteStudent(int id)
+        [HttpPost("DeleteStudent{id}")]
+        public async Task<IActionResult> DeleteStudent(int id)
         {
-            var student = students.FirstOrDefault(y => y.Id == id);
-            if (student == null)
-            {
-                return NotFound(new
-                {
-                    errMsg = "Data not found with provided id!"
-                });
-            }
-            students.Remove(student);
-            return Ok(new
-            {
-                this.deleteMsg
-            });
+            var existingData = await _dbContext.Students.FindAsync(id);
+            if (existingData == null)
+                return NotFound();
+             _dbContext.Remove(existingData);
+            await _dbContext.SaveChangesAsync();
+            return Ok(existingData);
+
         }
     }
 }

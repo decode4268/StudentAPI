@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
 using StudentAPI.Model;
+using StudentAPI.Repository.Interface;
+using StudentAPI.Repository.Services;
 
 namespace StudentAPI.Controllers
 {
@@ -10,22 +12,21 @@ namespace StudentAPI.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly ApplicationDbContext _dbContext;
-        public StudentController(ApplicationDbContext dbContext)
+        private readonly IRepository _student;
+        public StudentController(IRepository student)
         {
-            _dbContext = dbContext;
+            _student = student;
         }
 
         [HttpGet("GetStudents")]
         public async Task<ActionResult<List<Student>>> GetStudents()
         {
-            var data = await _dbContext.Students.ToListAsync();
-            return data;
+            return await _student.GetAll();
         }
         [HttpGet("GetStudentById{id}")]
         public async Task<ActionResult<Student>> GetStudentById(int id)
         {
-            var data = _dbContext.Students.FirstOrDefault(x => x.Id == id);
+            var data = await _student.GetById(id);
             if(data == null)
             {
                 return NotFound();
@@ -36,36 +37,51 @@ namespace StudentAPI.Controllers
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(Student student)
         {
-            await _dbContext.Students.AddAsync(student);
-            await _dbContext.SaveChangesAsync();
-
-            return CreatedAtAction(nameof(GetStudents), new { id = student }, student);
+           var data = await _student.AddStudent(student);
+            if (data != false)
+            {
+                return CreatedAtAction(nameof(GetStudents), new { id = student }, student);
+            }
+            return BadRequest();
         }
 
         [HttpPost("UpdateStudent")]
         public async Task<IActionResult> UpdateStudent(Student student)
         {
-            var existingData = await _dbContext.Students.FindAsync(student.Id);
-            if (existingData == null)
-                return NotFound();
-            existingData.Name = student.Name;
-            existingData.Email = student.Email;
-            existingData.Age = student.Age;
-
-            await _dbContext.SaveChangesAsync();
-            return Ok(existingData);
+            var data = await _student.UpdateStudent(student);
+            if (data == true)
+            {
+                return Ok(new
+                {
+                    code = 200,
+                    message ="Data Updated SuccessFully"
+                });
+            }
+            return BadRequest(new
+            {
+                code = 400,
+                message = "Something went wrong at out end, please try again later after some time"
+            });
 
         }
 
         [HttpPost("DeleteStudent{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var existingData = await _dbContext.Students.FindAsync(id);
-            if (existingData == null)
-                return NotFound();
-             _dbContext.Remove(existingData);
-            await _dbContext.SaveChangesAsync();
-            return Ok(existingData);
+            var data = await _student.DeleteStudent(id);
+            if (data == true)
+            {
+                return Ok(new
+                {
+                    code = 200,
+                    message = "Data removed SuccessFully"
+                });
+            }
+            return BadRequest(new
+            {
+                code = 400,
+                message = "Something went wrong at out end, please try again later after some time"
+            });
 
         }
     }

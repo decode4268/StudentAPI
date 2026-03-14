@@ -241,3 +241,26 @@ DbContext : Dbconext is the bridge btw application and database.
  Advantage : Non-blocking code, Handle multiple requests at the same time, Better API performace.
 
 
+ =========================================================
+
+	Repository Pattern : 
+
+	Unit of Work: Unit of Work manages multiple repository under one transactions. 
+	Example : 
+		a. studentrepository
+		b. courserepository
+		c. errolmentrepository	
+
+		All controlled by UnitOfWork. 
+
+
+======================================================
+
+DTO = Data Transfer object.
+=> Used to hide sensitive information. 
+
+AutoMapper : 
+
+
+
+

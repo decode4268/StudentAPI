@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
 using StudentAPI.Model;
+using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
 using StudentAPI.Repository.Services;
 
@@ -13,8 +14,13 @@ options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnectio
 
 // services scope 
 // 1. AddSingleton, 2.AddTransient, 3.AddScoped
-builder.Services.AddScoped<IRepository, StudentService>();
+//builder.Services.AddScoped<IRepository<Student>, StudentService>();
 builder.Services.AddScoped<ApplicationDbContext>();
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped(typeof(IRepository<Student>), typeof(StudentService));
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

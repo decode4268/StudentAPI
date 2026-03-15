@@ -5,7 +5,7 @@ using StudentAPI.Repository.Interface;
 
 namespace StudentAPI.Repository.Services
 {
-    public class StudentService : IRepository
+    public class StudentService : IRepository<Student>
     {
         private readonly ApplicationDbContext _context;
         public StudentService(ApplicationDbContext context)

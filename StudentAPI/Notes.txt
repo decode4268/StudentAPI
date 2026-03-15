@@ -246,6 +246,7 @@ DbContext : Dbconext is the bridge btw application and database.
 	Repository Pattern : 
 
 	Unit of Work: Unit of Work manages multiple repository under one transactions. 
+		=> The unit of work pattern multiple repository using a single database.
 	Example : 
 		a. studentrepository
 		b. courserepository

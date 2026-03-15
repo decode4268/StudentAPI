@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
 using StudentAPI.Model;
+using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
 using StudentAPI.Repository.Services;
 
@@ -12,21 +13,22 @@ namespace StudentAPI.Controllers
     [ApiController]
     public class StudentController : ControllerBase
     {
-        private readonly IRepository _student;
-        public StudentController(IRepository student)
+        //private readonly IRepository<Student> _student;
+        private readonly IUnitOfWork _unitOfWork;
+        public StudentController(IUnitOfWork unitOfWork)
         {
-            _student = student;
+            _unitOfWork = unitOfWork;
         }
 
         [HttpGet("GetStudents")]
         public async Task<ActionResult<List<Student>>> GetStudents()
         {
-            return await _student.GetAll();
+            return await _unitOfWork.students.GetAll();
         }
         [HttpGet("GetStudentById{id}")]
         public async Task<ActionResult<Student>> GetStudentById(int id)
         {
-            var data = await _student.GetById(id);
+            var data = await _unitOfWork.students.GetById(id);
             if(data == null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace StudentAPI.Controllers
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(Student student)
         {
-           var data = await _student.AddStudent(student);
+           var data = await _unitOfWork.students.AddStudent(student);
             if (data != false)
             {
                 return CreatedAtAction(nameof(GetStudents), new { id = student }, student);
@@ -48,7 +50,7 @@ namespace StudentAPI.Controllers
         [HttpPost("UpdateStudent")]
         public async Task<IActionResult> UpdateStudent(Student student)
         {
-            var data = await _student.UpdateStudent(student);
+            var data = await _unitOfWork.students.UpdateStudent(student);
             if (data == true)
             {
                 return Ok(new
@@ -68,7 +70,7 @@ namespace StudentAPI.Controllers
         [HttpPost("DeleteStudent{id}")]
         public async Task<IActionResult> DeleteStudent(int id)
         {
-            var data = await _student.DeleteStudent(id);
+            var data = await _unitOfWork.students.DeleteStudent(id);
             if (data == true)
             {
                 return Ok(new

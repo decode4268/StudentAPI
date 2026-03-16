@@ -254,13 +254,28 @@ DbContext : Dbconext is the bridge btw application and database.
 
 		All controlled by UnitOfWork. 
 
+		Flow : 
+			1. Client => 2. Controller => 3.UnitOfWork => 4.Repository => 5.DbContext => 6.Database.
+
+	Question : Why use Unit of Work with Repository? 
+	Answer : ?
+
 
 ======================================================
 
 DTO = Data Transfer object.
 => Used to hide sensitive information. 
 
-AutoMapper : 
+AutoMapper :  Source => Destination
+	When returing data from api, we often should not expose the entire database model.
+
+
+=======================================================
+
+
+Custom Validation : 
+		
+
 
 
 

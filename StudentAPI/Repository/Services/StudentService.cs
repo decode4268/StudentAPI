@@ -7,6 +7,10 @@ namespace StudentAPI.Repository.Services
 {
     public class StudentService : IRepository<Student>
     {
+        public class StudetnDTO
+        {
+            public string Name { get; set; }
+        }
         private readonly ApplicationDbContext _context;
         public StudentService(ApplicationDbContext context)
         {
@@ -15,6 +19,11 @@ namespace StudentAPI.Repository.Services
 
         public async Task<List<Student>> GetAll()
         {
+            //return  _context.Students.Select(x => new Student
+            //{
+            //    Name = x.Name
+
+            //}).ToList();
             var data = await _context.Students.ToListAsync();
             return data;
         }
@@ -63,7 +72,7 @@ namespace StudentAPI.Repository.Services
             _context.Remove(existingData);
             if (await _context.SaveChangesAsync() > 0)
             {
-                isDeleted = true;   
+                isDeleted = true;
             }
             return isDeleted;
         }

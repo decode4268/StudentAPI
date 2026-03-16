@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
+using StudentAPI.Mapping;
 using StudentAPI.Model;
 using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
@@ -19,6 +20,9 @@ builder.Services.AddScoped<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<Student>), typeof(StudentService));
+
+// Automapper services 
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 
 

@@ -273,7 +273,51 @@ AutoMapper :  Source => Destination
 =======================================================
 
 
-Custom Validation : 
+Custom Validation: 
+Fluent Validation:
+
+=========================================================
+
+Dependency Injection: DI is a desing pattern where dependencies are provided to a class instead of the class creating 
+them itself.
+
+		Controller => Service => Repository => DbContext => Database (DI container managed object creation)
+
+	Notes : All services and interface are registered inside Program.cs file.
+			Most Common type of DI is used with Constructor injection. 
+
+	=> Dotnet core provides 3 service lifetimes. 
+
+		1.Transient
+			=> A new intance is created every time the service is requested. 
+			For Example : Email service.
+			eg: builder.Services.AddTransient<IEmailService, EmailServices>();
+
+		2.Scoped : 
+			=> A single intance is created per HTTP request. 
+			For Exmpale: DbContext , Repository
+
+			eg: builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+			   builder.Services.AddScoped<ApplicationDbContext>();
+
+		3.Singleton: 
+			=> A single intance for the entire application lifetime. 
+			Example : Cache service, Configuration service 
+			builder.Services.AddSingleton<ICache, Cache>();
+
+	Lifetime					Instance Creation
+	---------------------------------------------------
+	Transient					Every tiem. 
+	Scoped						Per HTTP request
+	Singeton					Entire application
+
+
+	==============================================================
+
+	Middleware : Middleware is a piece of code that handle incomming http request and response.
+			=> Every request paased through middleware pipeline. 
+			
+	Flow :	Authetication Middleware => Logging Middleware => Routing Middleware => Controller => Response.
 		
 
 

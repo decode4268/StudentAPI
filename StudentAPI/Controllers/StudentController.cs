@@ -1,7 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Azure.Core;
+using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
+using StudentAPI.Helper;
 using StudentAPI.Model;
 using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
@@ -15,9 +18,12 @@ namespace StudentAPI.Controllers
     {
         //private readonly IRepository<Student> _student;
         private readonly IUnitOfWork _unitOfWork;
-        public StudentController(IUnitOfWork unitOfWork)
+        private readonly IValidator<StudentCustomFluentValidation> _validator;
+
+        public StudentController(IUnitOfWork unitOfWork, IValidator<StudentCustomFluentValidation> validator)
         {
             _unitOfWork = unitOfWork;
+            _validator = validator;
         }
 
         [HttpGet("GetStudents")]
@@ -29,7 +35,7 @@ namespace StudentAPI.Controllers
         public async Task<ActionResult<Student>> GetStudentById(int id)
         {
             var data = await _unitOfWork.students.GetById(id);
-            if(data == null)
+            if (data == null)
             {
                 return NotFound();
             }
@@ -39,7 +45,7 @@ namespace StudentAPI.Controllers
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(Student student)
         {
-           var data = await _unitOfWork.students.AddStudent(student);
+            var data = await _unitOfWork.students.AddStudent(student);
             if (data != false)
             {
                 return CreatedAtAction(nameof(GetStudents), new { id = student }, student);
@@ -56,7 +62,7 @@ namespace StudentAPI.Controllers
                 return Ok(new
                 {
                     code = 200,
-                    message ="Data Updated SuccessFully"
+                    message = "Data Updated SuccessFully"
                 });
             }
             return BadRequest(new
@@ -85,6 +91,21 @@ namespace StudentAPI.Controllers
                 message = "Something went wrong at out end, please try again later after some time"
             });
 
+        }
+
+        // Using here Fluent validation
+        [HttpPost("fludentValidator")]
+        public async Task<IActionResult> FludentValidator(StudentCustomFluentValidation request)
+        {
+            var validationResult = await _validator.ValidateAsync(request);
+
+            if (!validationResult.IsValid)
+            {
+                return BadRequest(validationResult.Errors);
+            }
+
+            // You can write logic here for if validation is correct..
+            return Ok("User registered successfully.");
         }
     }
 }

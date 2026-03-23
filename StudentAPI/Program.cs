@@ -1,5 +1,7 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
+using StudentAPI.Helper;
 using StudentAPI.Mapping;
 using StudentAPI.Model;
 using StudentAPI.Repository;
@@ -21,10 +23,15 @@ builder.Services.AddScoped<ApplicationDbContext>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<Student>), typeof(StudentService));
 
+//builder.Services.AddTransient<IEmailService, EmailServices>();
+
 // Automapper services 
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
-
+// add this service for fluent validation
+// Register FluentValidation
+//builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<StudentCustomFluentValidation>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

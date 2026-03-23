@@ -6,20 +6,19 @@ namespace StudentAPI.Helper
     {
         private readonly int _age;
         public MinimumAgeAttribute(int age)
-        {
+        {                                        
             _age = age;
         }
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             if (value == null)
                 return new ValidationResult("Age is required");
-            int age = (int)value;
+            int ageData = (int)value;
 
-            if (age < _age)
+            if (ageData < _age)
             {
                 return new ValidationResult($"Student age must be at least {_age}");
             }
-
             return ValidationResult.Success;
 
         }

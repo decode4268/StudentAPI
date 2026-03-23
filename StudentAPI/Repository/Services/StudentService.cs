@@ -17,6 +17,9 @@ namespace StudentAPI.Repository.Services
             _context = context;
         }
 
+        // without DI 
+        //private ApplicationDbContext _context = new ApplicationDbContext();
+
         public async Task<List<Student>> GetAll()
         {
             //return  _context.Students.Select(x => new Student

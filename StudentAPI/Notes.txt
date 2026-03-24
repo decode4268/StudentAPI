@@ -307,7 +307,7 @@ them itself.
 
 	Lifetime					Instance Creation
 	---------------------------------------------------
-	Transient					Every tiem. 
+	Transient					Every time. 
 	Scoped						Per HTTP request
 	Singeton					Entire application
 

@@ -1,8 +1,10 @@
 using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using StudentAPI.Database;
+using StudentAPI.DTO;
 using StudentAPI.Helper;
 using StudentAPI.Mapping;
+using StudentAPI.Middleware;
 using StudentAPI.Model;
 using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
@@ -14,6 +16,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
 options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("ApplicationSetting"));
 
 // services scope 
 // 1. AddSingleton, 2.AddTransient, 3.AddScoped
@@ -31,7 +35,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 // add this service for fluent validation
 // Register FluentValidation
 //builder.Services.AddFluentValidationAutoValidation();
-builder.Services.AddValidatorsFromAssemblyContaining<StudentCustomFluentValidation>();
+//builder.Services.AddValidatorsFromAssemblyContaining<StudentCustomFluentValidation>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -52,6 +56,8 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 
 app.UseAuthorization();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllers();   // Connect controller route with request pipeline.
 

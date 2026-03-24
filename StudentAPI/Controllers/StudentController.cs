@@ -18,12 +18,12 @@ namespace StudentAPI.Controllers
     {
         //private readonly IRepository<Student> _student;
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IValidator<StudentCustomFluentValidation> _validator;
+        //private readonly IValidator<StudentCustomFluentValidation> _validator;
 
-        public StudentController(IUnitOfWork unitOfWork, IValidator<StudentCustomFluentValidation> validator)
+        public StudentController(IUnitOfWork unitOfWork/*, IValidator<StudentCustomFluentValidation> validator*/)
         {
             _unitOfWork = unitOfWork;
-            _validator = validator;
+            //_validator = validator;
         }
 
         [HttpGet("GetStudents")]
@@ -94,18 +94,18 @@ namespace StudentAPI.Controllers
         }
 
         // Using here Fluent validation
-        [HttpPost("fludentValidator")]
-        public async Task<IActionResult> FludentValidator(StudentCustomFluentValidation request)
-        {
-            var validationResult = await _validator.ValidateAsync(request);
+        //[HttpPost("fludentValidator")]
+        //public async Task<IActionResult> FludentValidator(StudentCustomFluentValidation request)
+        //{
+        //    var validationResult = await _validator.ValidateAsync(request);
 
-            if (!validationResult.IsValid)
-            {
-                return BadRequest(validationResult.Errors);
-            }
+        //    if (!validationResult.IsValid)
+        //    {
+        //        return BadRequest(validationResult.Errors);
+        //    }
 
-            // You can write logic here for if validation is correct..
-            return Ok("User registered successfully.");
-        }
+        //    // You can write logic here for if validation is correct..
+        //    return Ok("User registered successfully.");
+        //}
     }
 }

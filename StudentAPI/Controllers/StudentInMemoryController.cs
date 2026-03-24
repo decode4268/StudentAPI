@@ -1,6 +1,8 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 using StudentAPI.DTO;
 using StudentAPI.Model;
 
@@ -11,16 +13,21 @@ namespace StudentAPI.Controllers
     public class StudentInMemoryController : ControllerBase
     {
         private readonly IMapper _mapper;
+        private readonly IConfiguration _config;
+        // with the help of IOption patterns 
+        private readonly AppSettings _settings; 
 
-        private  readonly string errMsg = "record already exist with same id";
-        private  readonly string deleteMsg = "Data Delete Successfully";
+        private readonly string errMsg = "record already exist with same id";
+        private readonly string deleteMsg = "Data Delete Successfully";
         static List<Student> students = new List<Student>()
         {
             new Student { Id = 1, Name="Deepraj", Email="deepraj@gmail.com", Age=20}
         };
-        public StudentInMemoryController(IMapper mapper)
+        public StudentInMemoryController(IMapper mapper, IConfiguration configuration, IOptions<AppSettings> options)
         {
-                  _mapper = mapper;
+            _mapper = mapper;
+            _config = configuration;
+            _settings = options.Value;
         }
 
         [HttpGet("GetStudents")]
@@ -28,6 +35,8 @@ namespace StudentAPI.Controllers
         public IActionResult GetStudents()
         {
             //return students;
+            //var data = _config["ApplicationSetting:AppName"]; // with the help of IConfiguration 
+            var data = _settings.AppName; // with the help of IOptions pattern
             var studentDTO = _mapper.Map<List<StudentDTO>>(students);
             return Ok(studentDTO);
         }

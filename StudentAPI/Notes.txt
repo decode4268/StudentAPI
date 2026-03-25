@@ -318,6 +318,42 @@ them itself.
 			=> Every request paased through middleware pipeline. 
 			
 	Flow :	Authetication Middleware => Logging Middleware => Routing Middleware => Controller => Response.
+
+
+
+	By Default .net core application provides many built-in middleware.
+		- UseAuthentication
+		- UseRouting 
+		- UseAuthorization.... etc.
+
+
+==================================================================================
+
+Authentication and Authorization 
+ => Authentication (WHO are you )
+	=> Login Process (Username + Password)
+
+=> Authorization (What can you do..)
+	=> Aceess control 
+	=> Role-based (Admin and User) for eg : Admin=> Delete the data from protal ; User => Insert the data into db with portal.
+
+
+	JWT = JSON Web Token (It is a secure token used for authentication)
+		Header + Payload + Signature
+
+
+	JWT Flow : 
+		Client => Login => Server => 
+		Server => Generate Token => Client 
+		Client => Send token in Header 
+		Server => Validate the token
+
+	===========================================================================
+
+	Claims : Claims are data inside token. 
+	   for eg : UserId, UserName, Role, Email....... etc. 
+
+	Token => Token is sent in every request. (Authentication Bearer <Token>)
 		
 
 

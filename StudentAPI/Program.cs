@@ -1,5 +1,7 @@
 using FluentValidation;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using StudentAPI.Database;
 using StudentAPI.DTO;
 using StudentAPI.Helper;
@@ -9,6 +11,7 @@ using StudentAPI.Model;
 using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
 using StudentAPI.Repository.Services;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +29,10 @@ builder.Services.AddScoped<ApplicationDbContext>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped(typeof(IRepository<Student>), typeof(StudentService));
+builder.Services.AddScoped<ITokenService, TokenService>();
+
+
+//TokenService: ITokenService
 
 //builder.Services.AddTransient<IEmailService, EmailServices>();
 
@@ -41,6 +48,33 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddAuthentication(options =>
+{
+    // Default scheme used for authentication
+    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    // Default scheme used for challenge (when authentication fails)
+    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+
+    // Default scheme used for sign-in
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        ValidateLifetime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration["Jwt:Issuer"],
+        ValidAudience = builder.Configuration["Jwt:Audience"],
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(builder.Configuration["Jwt:IssuerSigningKey"]))
+    };
+});
+
 
 var app = builder.Build();
 

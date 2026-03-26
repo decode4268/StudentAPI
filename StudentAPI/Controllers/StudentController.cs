@@ -18,12 +18,29 @@ namespace StudentAPI.Controllers
     {
         //private readonly IRepository<Student> _student;
         private readonly IUnitOfWork _unitOfWork;
+        private readonly ITokenService _tokenService;
         //private readonly IValidator<StudentCustomFluentValidation> _validator;
 
-        public StudentController(IUnitOfWork unitOfWork/*, IValidator<StudentCustomFluentValidation> validator*/)
+        public StudentController(IUnitOfWork unitOfWork,
+           ITokenService tokenService /*, IValidator<StudentCustomFluentValidation> validator*/)
         {
             _unitOfWork = unitOfWork;
             //_validator = validator;
+            _tokenService = tokenService;
+        }
+
+        [HttpPost("Login")]
+        public IActionResult Login(string userName, string password)
+        {
+            if (userName == "deep@gmail.com" && password == "123")
+            {
+                var token = _tokenService.GenerateToken(userName, "Admin");
+                return Ok(new
+                {
+                    token
+                });
+            }
+            return Unauthorized();
         }
 
         [HttpGet("GetStudents")]

@@ -359,6 +359,24 @@ Authentication and Authorization
 		=> There are two types of token : 
 			1.Access Token (On Login with specific time interval)
 			2.Refresh Token	()
+
+==============================================================================================
+
+Refresh Token 
+------------------------
+
+Problem with JWT 
+Access Token (JWT)
+	-Short-lived(eg: 15-60min)
+	-If expired user must login again (not good)
+
+Solution => Refresh Token 
+	Access Token -> Short expiry 
+	Refresh Token -> long expiry 
+
+	Process => ::
+	Login => AccessToken(short life) & RefreshToken(long life) => AccessToken Expres => 
+		Use RefreshToken => Generate New Access Token 
 		
 
 

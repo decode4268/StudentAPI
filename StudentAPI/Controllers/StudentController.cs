@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using FluentValidation;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -12,6 +13,7 @@ using StudentAPI.Repository.Services;
 
 namespace StudentAPI.Controllers
 {
+    //[Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -29,12 +31,14 @@ namespace StudentAPI.Controllers
             _tokenService = tokenService;
         }
 
+        [AllowAnonymous]
         [HttpPost("Login")]
         public IActionResult Login(string userName, string password)
         {
             if (userName == "deep@gmail.com" && password == "123")
             {
-                var token = _tokenService.GenerateToken(userName, "Admin");
+                var token = _tokenService.GenerateToken(userName, "Admin"); // Access Token
+                // Refresh token
                 return Ok(new
                 {
                     token
@@ -58,7 +62,7 @@ namespace StudentAPI.Controllers
             }
             return data;
         }
-
+        [Authorize(Roles ="Admin,SuperAdmin")]
         [HttpPost("AddStudent")]
         public async Task<IActionResult> AddStudent(Student student)
         {

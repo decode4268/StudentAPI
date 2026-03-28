@@ -354,6 +354,11 @@ Authentication and Authorization
 	   for eg : UserId, UserName, Role, Email....... etc. 
 
 	Token => Token is sent in every request. (Authentication Bearer <Token>)
+
+
+		=> There are two types of token : 
+			1.Access Token (On Login with specific time interval)
+			2.Refresh Token	()
 		
 
 

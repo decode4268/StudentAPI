@@ -14,7 +14,7 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StudentAPI.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StudentController : ControllerBase
@@ -51,6 +51,8 @@ namespace StudentAPI.Controllers
                 // Refresh token
                 return Ok(new
                 {
+                    Code = 200,
+                    Msg = "User logged in Successfully!",
                     AccessToken = token,
                     RefreshToken = refreshToken
                 });
@@ -111,7 +113,19 @@ namespace StudentAPI.Controllers
         [HttpGet("GetStudents")]
         public async Task<ActionResult<List<Student>>> GetStudents()
         {
-            return await _unitOfWork.students.GetAll();
+            try
+            {
+                var data = await _unitOfWork.students.GetAll();
+                return data;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Database Connection failed");
+
+                // Result : 
+                // 500 Internal Server  error 
+                // HTML error page.
+            }
         }
         [HttpGet("GetStudentById{id}")]
         public async Task<ActionResult<Student>> GetStudentById(int id)

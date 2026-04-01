@@ -32,9 +32,10 @@ namespace StudentAPI.Repository.Services
                  issuer: _config["Jwt:Issuer"],
                   audience: _config["Jwt:Audience"],
                   claims: claims,
-                  expires: DateTime.Now.AddMinutes(
-                      Convert.ToDouble(_config["Jwt:TokenDuration"])
-                      ),
+                  expires: DateTime.Now.AddMinutes(2),
+                  //DateTime.Now.AddSeconds(
+                  //    Convert.ToDouble(_config["Jwt:TokenDuration"])
+                  //    ),
                   signingCredentials: credentials
                 );
 

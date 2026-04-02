@@ -126,6 +126,7 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
+app.UseMiddleware<ExceptionMiddleware>();
 
 app.MapControllers();   // Connect controller route with request pipeline.
 

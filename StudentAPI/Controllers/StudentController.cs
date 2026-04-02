@@ -116,6 +116,8 @@ namespace StudentAPI.Controllers
             try
             {
                 var data = await _unitOfWork.students.GetAll();
+                //if (data == null)
+                //    throw new NotFoundException("Student Data not found");
                 return data;
             }
             catch (Exception ex)

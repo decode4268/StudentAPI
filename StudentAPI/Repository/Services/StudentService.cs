@@ -11,9 +11,11 @@ namespace StudentAPI.Repository.Services
         {
             public string Name { get; set; }
         }
+        private readonly ILogger<StudentService> _logger;
         private readonly ApplicationDbContext _context;
-        public StudentService(ApplicationDbContext context)
+        public StudentService(ApplicationDbContext context, ILogger<StudentService> logger)
         {
+            _logger = logger;
             _context = context;
         }
 
@@ -27,7 +29,12 @@ namespace StudentAPI.Repository.Services
             //    Name = x.Name
 
             //}).ToList();
+            _logger.LogInformation("Fetching students data from database");
             var data = await _context.Students.ToListAsync();
+            if (!data.Any())
+            {
+                _logger.LogWarning("No studen   ts data found in db");
+            }
             return data;
         }
         public async Task<Student> GetById(int id)

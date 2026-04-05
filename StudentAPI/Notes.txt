@@ -377,8 +377,75 @@ Solution => Refresh Token
 	Process => ::
 	Login => AccessToken(short life) & RefreshToken(long life) => AccessToken Expres => 
 		Use RefreshToken => Generate New Access Token 
-		
 
+
+=====================
+ 
+ Logging 
+  => Used for 
+		1. Tract the application flow. 
+		2. At the time of Debugging issue. 
+		3. For monitoring the system behavior 
+		4. To watch or monitor the error for application system.
+
+
+Log Level 
+Level 		Value	Description & Use Case
+Trace		0		Most detailed; may contain sensitive data. Used primarily for deep debugging.
+Debug		1		Detailed information useful during development and short-term troubleshooting.
+Information	2		Tracks the general flow of the application (e.g., "Request started"). Usually the default in production.
+Warning		3		Abnormal or unexpected events that don't stop the app but might require investigation (e.g., a handled exception).
+Error		4		Errors that prevent a specific operation from completing but don't crash the entire app.
+Critical	5		Severe failures requiring immediate attention (e.g., out of memory, database connection lost).
+None		6		A special level used to completely disable logging for a category.
+
+
+Notes : Never log sensitive data like as : 
+		=> Username, Password, Tokens, Personal data of application user.
+
+	Flow => 
+		Request => Middleware Logging => Controller Logging => Service Logging => Datatbase
+					=> Response Logging.
+
+
+Task 1 : Save the log information in Text file in application.
+Task 2 : Implement logging in : 
+				1. Controller => Log API call 
+				2. Service => Log DB operation before and after. 
+				3. Middleware => Log request and respone and use try catch exception.
+
+
+----------------------------------------------
+
+1. What is ILogger ? 
+2. What are log levels ?
+3. Difference between LogInformation and LogError ? 
+=============================================================================
+
+API Versioning : 
+
+Initially api return this response :(/api/Student/GetStudentNameById?Id=1) 
+
+Json : 
+{
+ "name":"Rahul"
+}
+
+Latter on client return name with email on the same api : (/api/Student/GetStudentNameById?Id=1)
+
+Json : 
+{
+ "name":"Rahul", 
+ "email":"rahul@gmail.com"
+}
+---------------------------
+Solution : API Versioning 
+v1 => old response
+v2 => new reponse 
+
+API Versioning ? 
+=> 	Maintain multiple versions of api without breaking exisiting clients application. 
+    It introudce new features safely.
 
 
 

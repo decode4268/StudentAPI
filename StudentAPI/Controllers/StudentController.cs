@@ -25,15 +25,17 @@ namespace StudentAPI.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
         //private readonly IValidator<StudentCustomFluentValidation> _validator;
+        private readonly ILogger<StudentController> _logger;
 
         public StudentController(IUnitOfWork unitOfWork
             , ApplicationDbContext context,
-           ITokenService tokenService /*, IValidator<StudentCustomFluentValidation> validator*/)
+           ITokenService tokenService, ILogger<StudentController> logger /*, IValidator<StudentCustomFluentValidation> validator*/)
         {
             _unitOfWork = unitOfWork;
             //_validator = validator;
             _tokenService = tokenService;
             _context = context;
+            _logger = logger;
         }
 
         [AllowAnonymous]
@@ -110,11 +112,13 @@ namespace StudentAPI.Controllers
 
         }
 
+        [AllowAnonymous]
         [HttpGet("GetStudents")]
         public async Task<ActionResult<List<Student>>> GetStudents()
         {
             try
             {
+                _logger.LogInformation("Fetching the all student data");
                 var data = await _unitOfWork.students.GetAll();
                 //if (data == null)
                 //    throw new NotFoundException("Student Data not found");
@@ -129,15 +133,28 @@ namespace StudentAPI.Controllers
                 // HTML error page.
             }
         }
+
         [HttpGet("GetStudentById{id}")]
         public async Task<ActionResult<Student>> GetStudentById(int id)
         {
-            var data = await _unitOfWork.students.GetById(id);
-            if (data == null)
+            try
             {
-                return NotFound();
+                var data = await _unitOfWork.students.GetById(id);
+                _logger.LogInformation("Fetching student data with Id {Id}", id, data.Name, DateTime.Now);
+                _logger.LogCritical("Application crashed due to DB connection failed");
+                if (data == null)
+                {
+                    _logger.LogWarning("Student not found with Id {Id}", id);
+                    return NotFound();
+                }
+                return data;
             }
-            return data;
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error occured while getting the student data!");
+                throw;
+            }
+
         }
         [Authorize(Roles = "Admin,SuperAdmin")]
         [HttpPost("AddStudent")]

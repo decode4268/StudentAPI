@@ -447,6 +447,17 @@ API Versioning ?
 => 	Maintain multiple versions of api without breaking exisiting clients application. 
     It introudce new features safely.
 
+Types of API Versioning : 
+ 1. URL Versioning => for eg : /api/v1/student or /api/v2/student.
+ 2. Query String Versioning 
+
+ Note : Same endpoint => Different version => Different Behavior
+
+ Need to install these packages : 
+ dotnet add package Asp.Versioning.Mvc
+ dotnet add package Asp.Versioning.Mvc.ApiExplorer
+
+ 
 
 
 

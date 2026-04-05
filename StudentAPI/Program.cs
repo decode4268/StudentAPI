@@ -1,5 +1,6 @@
 using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -48,7 +49,10 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
+}); ;
 
 builder.Services.AddAuthentication(options =>
 {
@@ -77,6 +81,25 @@ builder.Services.AddAuthentication(options =>
         ClockSkew = TimeSpan.Zero
     };
 });
+
+// api versioning 
+builder.Services.AddApiVersioning(options =>
+{
+    // for Url versioning 
+    //options.AssumeDefaultVersionWhenUnspecified = true;
+    //options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+
+    //options.ReportApiVersions = true;
+
+    // for Query string versioning 
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new Microsoft.AspNetCore.Mvc.ApiVersion(1, 0);
+
+    options.ApiVersionReader = new QueryStringApiVersionReader("api-version");
+});
+// DefaultAPIVersion =>  Default version if not provided
+// AssumeDefaultVersionWhenUnspecified = Use default automatically
+// ReportApiVersions => Shows supported version in response.
 
 // for passing token in header in swagger..
 //builder.Services.AddSwaggerGen(c =>

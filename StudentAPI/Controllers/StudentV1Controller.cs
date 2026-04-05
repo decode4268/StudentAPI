@@ -14,10 +14,12 @@ using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace StudentAPI.Controllers
 {
-    [Authorize]
-    [Route("api/[controller]")]
+    //[Authorize]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/student")]
+    //[Route("api/[controller]")]  old route without api versioning 
     [ApiController]
-    public class StudentController : ControllerBase
+    public class StudentV1Controller : ControllerBase
     {
 
         private readonly ApplicationDbContext _context;
@@ -25,17 +27,27 @@ namespace StudentAPI.Controllers
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenService _tokenService;
         //private readonly IValidator<StudentCustomFluentValidation> _validator;
-        private readonly ILogger<StudentController> _logger;
+        private readonly ILogger<StudentV1Controller> _logger;
 
-        public StudentController(IUnitOfWork unitOfWork
+        public StudentV1Controller(IUnitOfWork unitOfWork
             , ApplicationDbContext context,
-           ITokenService tokenService, ILogger<StudentController> logger /*, IValidator<StudentCustomFluentValidation> validator*/)
+           ITokenService tokenService, ILogger<StudentV1Controller> logger /*, IValidator<StudentCustomFluentValidation> validator*/)
         {
             _unitOfWork = unitOfWork;
             //_validator = validator;
             _tokenService = tokenService;
             _context = context;
             _logger = logger;
+        }
+
+        [HttpGet]
+        public IActionResult Get()
+        {
+            return Ok(new
+            {
+                Version = "V1",
+                Name = "Rahul"
+            });
         }
 
         [AllowAnonymous]

@@ -47,6 +47,7 @@ builder.Services.AddAutoMapper(typeof(MappingProfile));
 //builder.Services.AddValidatorsFromAssemblyContaining<StudentCustomFluentValidation>();
 
 builder.Services.AddControllers();
+builder.Services.AddMemoryCache(); // To enable memory caching.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
@@ -151,6 +152,7 @@ app.UseAuthorization();
 app.UseMiddleware<RequestLoggingMiddleware>();
 app.UseMiddleware<ExceptionMiddleware>();
 app.UseMiddleware<LoggingMiddleware>();
+app.UseResponseCaching();
 
 app.MapControllers();   // Connect controller route with request pipeline.
 

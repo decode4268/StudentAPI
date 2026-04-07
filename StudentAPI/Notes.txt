@@ -457,6 +457,14 @@ Types of API Versioning :
  dotnet add package Asp.Versioning.Mvc
  dotnet add package Asp.Versioning.Mvc.ApiExplorer
 
+
+ =====================================================
+
+ Caching: It stores data temporarily so future requests can be served faster. 
+		  There are two common approaches : 
+			1. Response Caching : caches entire HTTP reponse. 
+			2. Memory Caching : caches specific data obj in server memory location.
+
  
 
 

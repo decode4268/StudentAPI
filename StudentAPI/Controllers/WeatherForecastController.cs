@@ -4,6 +4,7 @@ namespace StudentAPI.Controllers
 {
     [ApiController]
     [Route("[controller]")]
+    [ResponseCache(Duration =30, Location = ResponseCacheLocation.Any)]
     public class WeatherForecastController : ControllerBase
     {
         private static readonly string[] Summaries = new[]

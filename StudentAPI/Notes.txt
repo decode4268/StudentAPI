@@ -465,6 +465,11 @@ Types of API Versioning :
 			1. Response Caching : caches entire HTTP reponse. 
 			2. Memory Caching : caches specific data obj in server memory location.
 
+
+===================================================
+
+Pagination =>
+
  
 
 

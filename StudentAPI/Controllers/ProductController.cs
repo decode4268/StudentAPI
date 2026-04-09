@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Memory;
 using StudentAPI.DTO;
+using System.Linq;
 
 namespace StudentAPI.Controllers
 {
@@ -95,17 +97,47 @@ namespace StudentAPI.Controllers
             return Ok(product);
         }
 
-        //[HttpGet("Pagination")]
-        //public IActionResult GetPaginationData(int pageNumber = 1, int pageSize = 2)
-        //{
-        //    return Ok(new
-        //    {
-        //        PageNumber = pageNumber,
-        //        PageSize = pageSize,
-        //        TotalItem = Products.Count,
-        //        Data = Products
-        //    });
+        [HttpGet("Pagination")]
+        public IActionResult GetPaginationData(int? pageNumber, int? pageSize)
+        {
+            IEnumerable<Product> item;
+            // Skips records based on page. 
+            // Take fetches only required recrod based on the parms . like Take(50) => return it will 50 record
+            if (pageNumber.HasValue && pageSize.HasValue)
+            {
+                item = Products
+                    .Skip((pageNumber.Value - 1) * pageSize.Value)
+                    .Take(pageSize.Value)
+                    .ToList();
+            }
+            else
+            {
+                item = Products.ToList();
+            }
 
-        //}
+            return Ok(new
+            {
+                PageNumber = pageNumber ?? 1,
+                PageSize = pageSize ?? Products.Count,
+                TotalPageNumber = Products.Count / pageSize,
+                TotalItem = Products.Count,
+
+                Data = item
+            });
+        }
+
+        [HttpGet("Sort")]
+        public IActionResult GetSortedProducts(string? sortBy= "Price", string? order="asc")
+        {
+
+            var item = Products.AsQueryable();
+
+            item = sortBy.ToLower() switch
+            {
+              "name" => order == "asc" ? item.OrderBy(p => p.Name) : item.OrderByDescending(p => p.Name),
+              "price" => order == "asc" ? item.OrderBy(p => p.Price) : item.OrderByDescending(p => p.Price)
+            };
+            return Ok(item.ToList());
+        }
     }
 }

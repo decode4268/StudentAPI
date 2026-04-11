@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 using Microsoft.Extensions.Caching.Memory;
 using StudentAPI.DTO;
 using System.Linq;
@@ -127,17 +128,61 @@ namespace StudentAPI.Controllers
         }
 
         [HttpGet("Sort")]
-        public IActionResult GetSortedProducts(string? sortBy= "Price", string? order="asc")
+        public IActionResult GetSortedProducts(string? sortBy = "Price", string? order = "asc")
         {
 
             var item = Products.AsQueryable();
 
             item = sortBy.ToLower() switch
             {
-              "name" => order == "asc" ? item.OrderBy(p => p.Name) : item.OrderByDescending(p => p.Name),
-              "price" => order == "asc" ? item.OrderBy(p => p.Price) : item.OrderByDescending(p => p.Price)
+                "name" => order == "asc" ? item.OrderBy(p => p.Name) : item.OrderByDescending(p => p.Name),
+                "price" => order == "asc" ? item.OrderBy(p => p.Price) : item.OrderByDescending(p => p.Price)
             };
             return Ok(item.ToList());
+        }
+
+        [HttpGet("CompleteSortPageAndSearch")]
+        public IActionResult SearchProducts(string? category, string? sortBy, string order = "asc",
+            int pageNumber = 1, int pageSize = 5)
+        {
+            var items = Products.AsQueryable();
+
+            // filter 
+            if (!string.IsNullOrEmpty(category))
+            {
+                items = items.Where(p => p.Category.Equals(category, StringComparison.OrdinalIgnoreCase));
+            }
+
+            // Sorting 
+            if (sortBy.Equals("name", StringComparison.OrdinalIgnoreCase))
+            {
+                items = order.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? items.OrderBy(p => p.Name) : items.OrderByDescending(p => p.Name);
+            }
+            else if (sortBy.Equals("price", StringComparison.OrdinalIgnoreCase))
+            {
+                items = order.Equals("asc", StringComparison.OrdinalIgnoreCase)
+                    ? items.OrderBy(p => p.Price) : items.OrderByDescending(p => p.Price);
+            }
+            else
+            {
+                items = items.OrderBy(p => p.Id); // Default sorting if not any parameter will paas. 
+            }
+
+            // Pagination 
+
+            var paginationItem = items.Skip((pageNumber - 1) * pageSize)
+                                    .Take(pageSize).ToList();
+
+            return Ok(new
+            {
+                PageNumber = pageNumber,
+                PageSize = pageSize,
+                TotalPageNumber = Products.Count / pageSize,
+                TotalItem = Products.Count,
+                Data = paginationItem
+            });
+
         }
     }
 }

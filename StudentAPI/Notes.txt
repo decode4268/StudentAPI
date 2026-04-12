@@ -470,6 +470,95 @@ Types of API Versioning :
 
 Pagination =>
 
+
+===================================================
+
+=> Async Programming ? 
+=> Async allows API to handle more requests without blocking threads.
+
+Eg : 
+		Instead of writing this code : 
+		public IActionResult GetData()
+        {
+            var data = _context.Student.ToList();	// Blocking call 
+            return Ok(data);
+        }
+
+		// Always prefer this code. 
+        public async Task<IActionResult> GetData()
+        {
+            var data = await _context.Student.ToListAsync();  // Non-Blocking
+            return Ok(data);
+        }
+
+
+		Task => Represents an async operation
+		Task<T> => return a value.
+
+	=> ConfigureAwait() : Control context capturing.. 
+		
+		[HTTPGET]
+		public async Task<IActionResult> GetStudentData()
+        {
+            var result = await FetchDataFromApiAsync().ConfigureAwait(
+			); 
+    
+			// This part now runs on a background ThreadPool thread.
+			var processed = Process(result); 
+        }
+
+
+		public void FetchDataFromApiAsync(){	 
+
+		 return _context.data.toList();
+		}
+
+		Note: 
+			1.In ConfigureAwait method of False will provide the better perfomance.
+			2.In ConfigureAwait method of True(default) will resume on original thread
+
+	=> Best Practice 
+		1.Always use async/await
+		2.Avoid blocking 
+		3.Use async EF methods:
+		   i.ToListAsync()
+		   ii.FirstOrDefaultAsync()
+
+
+================================================================
+
+Rate Limiting: 
+		To Prevent the malicious attempt or to many request from differenct resource we use rate limiting. 
+		Protect API From : 
+			1. To many requests. 
+			2. DDoS Attach 
+			3. Abuse.
+
+		Type of Rate Limiting : 
+		 1.Fixed Window
+		 2.Sliding window 
+		 3.Token BUcket
+
+================================================================
+
+DevOps => Dev(Development) + Ops(Operation)
+
+
+====================================================
+	
+	Interview Question: 
+
+	1. What is async/await ? 
+	2. Difference between Task and Thread ? 
+	3.What is ConfigureAwait ? 
+	4. What is late limiting and their types ? 
+	5. How does ASP.Net core handle request internally ? 
+	6. What is Kestral and IIS Web server ? 
+
+
+
+
+
  
 
 

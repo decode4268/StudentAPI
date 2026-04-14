@@ -558,6 +558,16 @@ DevOps => Dev(Development) + Ops(Operation)
 
 
 
+	================================================================
+
+
+		Swagger Configuration : 
+		
+		1. What is swagger ? 
+		- Test apis directly in browser 
+		- Generate API documetnation
+		- Share API contracts with frontend teams.
+
 
  
 

@@ -79,6 +79,13 @@ namespace StudentAPI.Controllers
         }
 
 
+        /// <summary>
+        ///  Get the product details by product Id.
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns> Details of product</returns>
+        /// <response code="200">Success</response>
+
         [HttpGet("{id}")]
         public IActionResult GetProductById(int id)
         {
@@ -94,7 +101,6 @@ namespace StudentAPI.Controllers
                     .SetPriority(CacheItemPriority.High);
 
                 _cache.Set(cacheKey, product, cacheOptions);
-
 
             }
             return Ok(product);

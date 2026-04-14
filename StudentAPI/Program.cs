@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using StudentAPI.Database;
@@ -14,6 +15,7 @@ using StudentAPI.Model;
 using StudentAPI.Repository;
 using StudentAPI.Repository.Interface;
 using StudentAPI.Repository.Services;
+using System.Reflection;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -59,8 +61,16 @@ builder.Services.AddMemoryCache(); // To enable memory caching.
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
+    // 1. Get the XML file name based on the assembly name
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+
+    // 2. Combine it with the application's base path
+    var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFilename);
+
+    // 3. Tell Swagger to use it
+    c.IncludeXmlComments(xmlPath);
     c.ResolveConflictingActions(apiDescriptions => apiDescriptions.First());
-}); ;
+});
 
 builder.Services.AddAuthentication(options =>
 {

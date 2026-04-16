@@ -164,6 +164,9 @@ builder.Services.AddRateLimiter(options =>
 
 var app = builder.Build();
 
+app.MapGet("/hello", () => "Hello World!");
+app.MapGet("/users/{id}", (int id) => $"User ID: {id}");
+
 app.UseRateLimiter();
 
 // Configure the HTTP request pipeline.

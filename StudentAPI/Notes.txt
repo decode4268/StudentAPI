@@ -569,7 +569,18 @@ DevOps => Dev(Development) + Ops(Operation)
 		- Share API contracts with frontend teams.
 
 
- 
 
+
+ 	==================================================================================================
+
+
+	Desing Pattern : 
+
+	1. Repository Pattern 
+	2. Unit of work.
+	3. Singleton Desing Pattern: 
+			Singleton : 
+				- Only one instance of a class exist and provides a global point. 
+				 
 
 
